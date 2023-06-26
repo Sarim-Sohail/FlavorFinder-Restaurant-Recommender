@@ -18,5 +18,5 @@ The highest accuracy attained was 78.8%. There are one of 20 types of cuisines f
 Django was used to incorporate a web-based user interface to be able to take input and show output.
 
 In order to run this project, you'll need to use pgAdmin and import the csv file. This can be a hassle to do, as pgAdmin may even require more configuration to work. Then, you'll use   
-`py manage.py runserver`
+`py manage.py runserver`  
 in the terminal to run the project.
