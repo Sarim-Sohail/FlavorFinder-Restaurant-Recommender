@@ -1,0 +1,199 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Flavor Hunt</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="{% static 'assets/fonts/simple-line-icons.min.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    {% comment %} <style>.myButton{
+        margin-top: -2px;
+        position: absolute;
+        z-index: 1;
+        color:"red"
+    }</style> {% endcomment %}
+    <style>
+        .css-serial { text-align: center; vertical-align: middle;
+        counter-reset: serial-number;  /* Set the serial number counter to 0 */
+        }
+
+        .css-serial td:first-child:before { text-align: center; vertical-align: middle;
+        counter-increment: serial-number;  /* Increment the serial number counter */
+        content: counter(serial-number);  /* Display the counter */
+        }
+    </style>
+</head>
+
+<body>
+    <header class="text-center text-white masthead" style="background:url('/static/assets/img/p4.jpg')no-repeat center center;background-size:cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto position-relative">
+                    <h1 class="mb-5">FLAVORFINDER</h1>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto position-relative">
+                    <form action="home" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12 my-2"><input name="predict" class="form-control" type="text" placeholder="Enter your ingredients" type="submit"></div>
+                            <div class="col-lg-12 my-2"><button class="btn btn-primary btn-lg" type="submit">Predict</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto position-relative">
+            <form action="recommendations" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12 my-2 col-md-9"><input name="recommendations" class="form-control" placeholder="Cuisine" type="text" value="{{data}}"></div>
+                    <div class="col-lg-4">
+                        <select class="form-select" aria-label="Default select example" name="selectcountry">
+                            <option selected>Country</option>
+                            {% for i in country %}
+                            <option value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                          </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <select class="form-select" aria-label="Default select example" name="selectcost">
+                            <option selected>Cost</option>
+                            <option value="Highest to Lowest">Highest to Lowest</option>
+                            <option value="Lowest to Highest">Lowest to Highest</option>
+                          </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <select class="form-select" aria-label="Default select example" name="selectcurrency">
+                            <option selected>Currency</option>
+                            {% for i in currency %}
+                            <option value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                          </select>
+                    </div>
+                    <div class="col-lg-12 my-2 col-md-3"><button class="btn btn-primary btn-lg" type="submit">Recommend</button></div>
+                </div>
+            </form>
+        </div>
+    </header>
+    
+    <!-- <section class="showcase"></section>
+    <section class="text-center text-white call-to-action" >
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto position-relative">
+                    <h2 class="mb-4">Recommended Cuisine</h2>
+                </div>
+                
+            </div>
+        </div>
+    
+    </section> -->
+    {% if res %}
+    
+    <section class="showcase"></section>
+    <section class="text-center text-white call-to-action">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                {% comment %} {% for i in res %}
+                <button id="myButton" class="float-left submit-button"  value={{i.link}}>{{i.link}}</button>
+                {% endfor %} {% endcomment %}
+                <table class="table table-dark table-striped css-serial">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Country</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Cuisine</th>
+                        <th scope="col">Cost</th>
+                        <th scope="col">Has Booking</th>
+                        <th scope="col">Has Delivery</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Reviews</th>
+                        <th scope="col">Link</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        
+                        
+                        {% for i in res %}
+                        <tr>
+                            <td> </td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.name}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.country}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.city}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.cuisine}}</td>
+                            
+                            <td style="text-align: center; vertical-align: middle;">{{i.cost}} {{i.currency}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.book}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.delivery}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.rating}}</td>
+                            <td style="text-align: center; vertical-align: middle;">{{i.reviews}}</td>
+                            {% comment %} <td ><a href="{{i.link}}" class="stretched-link">Link</a></td> {% endcomment %}
+                            <td ><button class="btn btn-primary btn-lg" style="color:white;z-index:1!important;position:relative" id="myButton" onClick="document.location.href='{{i.link}}';" input="submit">Link</button></td>
+                          </tr>
+                        {% endfor %}
+                      
+                      
+                    </tbody>
+                  </table>
+                    
+                
+            </div>
+        </div>
+
+    </section>
+    {% endif %}
+    <footer class="bg-light footer">
+        <section class="text-center bg-light features-icons">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                            <div class="d-flex features-icons-icon"><i class="icon-screen-desktop m-auto text-primary" data-bss-hover-animate="pulse"></i></div>
+                            <h3></h3>
+                            <p class="lead mb-0"></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                            <div class="d-flex features-icons-icon"><i class="icon-layers m-auto text-primary" data-bss-hover-animate="pulse"></i></div>
+                            <h3></h3>
+                            <p class="lead mb-0"></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
+                            <div class="d-flex features-icons-icon"><i class="icon-check m-auto text-primary" data-bss-hover-animate="pulse"></i></div>
+                            <h3></h3>
+                            <p class="lead mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </footer>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'assets/js/bs-init.js'%}"></script>
+    <script type="text/javascript">
+        document.getElementById("myButton").onclick = myFunction()
+        {
+            console.log(document.getElementById("myButton").innerHTML)
+
+            document.location.href =document.getElementById("myButton").innerHTML;
+        };
+    </script>
+</body>
+
+
+
+
+</html>
